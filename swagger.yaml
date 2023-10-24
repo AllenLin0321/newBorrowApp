@@ -34,7 +34,11 @@ paths:
               $ref: '#/components/schemas/LoginInfo'
       responses:
         '200':
-          description: Successfully logout
+          description: Successfully login
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
 
   /logout:
     post:
@@ -59,7 +63,9 @@ paths:
                     type: string
                     example: bearer
         '400':
-          description: Invalid username/password supplied
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
 
   /user:
     get:
@@ -76,8 +82,34 @@ paths:
 
         '400':
           description: Invalid request
+        '401':
+          $ref: '#/components/responses/401Error'
           
-          
+    post:
+      tags:
+        - User
+      description: Update user information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+      responses:
+        '200':
+          description: Update successfully
+        '400':
+          description: Update fail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Mobile number is required
+        '401':
+          $ref: '#/components/responses/401Error'
 components:
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
@@ -152,3 +184,8 @@ components:
         grantType:
           type: string
           example: password
+  responses:
+    400Error:
+      description: Invalid request
+    401Error:
+      description: Authentication information is missing or invalid
